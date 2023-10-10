@@ -1,64 +1,102 @@
 import 'package:flutter/material.dart';
 
+// HomePage (Header, Bottom)
+
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyPage(),
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }
 
-class MyPage extends StatefulWidget {
-  const MyPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-  // createState가 상태 변경시마다 실행됨.
   @override
-  State<MyPage> createState() {
-    print("1. createState()");
-    return _MyPageState();
-  }
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MyPageState extends State<MyPage> {
-  @override
-  Widget initState() {
-    print("2. _MyPageState()");
-    return const Placeholder();
+class _HomePageState extends State<HomePage> {
+  // 상태
+  int num = 1;
+
+  // 행위
+  void add() {
+    setState(() {
+      num = num + 1;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("2. _MyPageState build()");
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              Expanded(
-                child: Text(
-                  "1",
-                  style: TextStyle(fontSize: 50),
-                ),
-              ),
-              Expanded(
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "증가",
-                    style: TextStyle(
-                      fontSize: 50,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+    return Container(
+      color: Colors.yellow,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Expanded(child: HeaderPage(num)),
+            Expanded(child: BottomPage(add)), // 함수를 전달할때는 함수 이름만 전달하기
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class HeaderPage extends StatelessWidget {
+  final num; // HeaderPage는 계속 new되기 때문에 num값이 final이여도 상관 없다
+  HeaderPage(this.num);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Text(
+          "${num}",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 100,
+              decoration: TextDecoration.none),
+        ),
+      ),
+    );
+  }
+}
+
+class BottomPage extends StatelessWidget {
+  final add;
+  BottomPage(this.add);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.blue,
+      child: Align(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          onPressed: () {
+            print("버튼 클릭됨");
+            add();
+          },
+          child: Text(
+            "증가",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 100,
+            ),
           ),
         ),
       ),
